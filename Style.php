@@ -9,6 +9,8 @@ Author: Waboot Team <info@waboot.io>
 Author URI: http://www.waboot.io
  */
 
+require_once 'functions.php';
+
 class Style extends \WBF\modules\components\Component{
 	public function setup() {
 		parent::setup();
@@ -16,6 +18,24 @@ class Style extends \WBF\modules\components\Component{
 
 	public function run() {
 		parent::run();
+	}
+
+	public function styles() {
+		$file = \Waboot\components\style\get_theme_options_css_dest_path();
+		if(!is_readable($file)){
+			return;
+		}
+		$assets['waboot-theme-options-style'] = [
+			'uri' => \Waboot\components\style\get_theme_options_css_dest_uri(),
+			'path' => $file,
+			'type' => 'css'
+		];
+		$am = new \WBF\components\assets\AssetsManager($assets);
+		try{
+			$am->enqueue();
+		}catch (\Exception $e){
+			trigger_error($e->getMessage(),E_USER_NOTICE);
+		}
 	}
 
 	public function register_options() {
@@ -40,7 +60,7 @@ class Style extends \WBF\modules\components\Component{
 			'id' => 'body_bgcolor',
 			'std' => "#ededed",
 			'type' => 'color',
-			'save_action' => "\\Waboot\\functions\\deploy_theme_options_css"
+			'save_action' => "\\Waboot\\components\\style\\deploy_theme_options_css"
 		]);
 
 		$orgzr->add([
@@ -49,7 +69,7 @@ class Style extends \WBF\modules\components\Component{
 			'id' => 'body_bgimage',
 			'std' => '',
 			'type' => 'upload',
-			'save_action' => "\\Waboot\\functions\\deploy_theme_options_css"
+			'save_action' => "\\Waboot\\components\\style\\deploy_theme_options_css"
 		]);
 
 		$orgzr->add([
@@ -58,7 +78,7 @@ class Style extends \WBF\modules\components\Component{
 			'id' => 'body_bgrepeat',
 			'type' => 'select',
 			'options' => array( 'no-repeat' => 'No Repeat', 'repeat' => 'Repeat','repeat-x' => 'Repeat Horizontally', 'repeat-y' => 'Repeat Vertically' ),
-			'save_action' => "\\Waboot\\functions\\deploy_theme_options_css"
+			'save_action' => "\\Waboot\\components\\style\\deploy_theme_options_css"
 		]);
 
 		$orgzr->add([
@@ -72,7 +92,7 @@ class Style extends \WBF\modules\components\Component{
 				'center left' => 'center left', 'center center' => 'center center', 'center right' => 'center right',
 				'bottom left' => 'bottom left', 'bottom center' => 'bottom center', 'bottom right' => 'bottom right'
 			),
-			'save_action' => "\\Waboot\\functions\\deploy_theme_options_css"
+			'save_action' => "\\Waboot\\components\\style\\deploy_theme_options_css"
 		]);
 
 		$orgzr->add([
@@ -82,7 +102,24 @@ class Style extends \WBF\modules\components\Component{
 			'std' => 'scroll',
 			'type' => 'select',
 			'options' => array( 'scroll' => 'scroll','fixed' => 'fixed' ),
-			'save_action' => "\\Waboot\\functions\\deploy_theme_options_css"
+			'save_action' => "\\Waboot\\components\\style\\deploy_theme_options_css"
+		]);
+
+		$orgzr->add([
+			'name' => _x('Page Background color', 'Theme options', 'Theme options', 'waboot'),
+			'desc' => _x('Change the page background color.', 'Theme options', 'waboot'),
+			'id' => 'page_bgcolor',
+			'type' => 'color',
+			'std' => '#ffffff',
+			'save_action' => "\\Waboot\\components\\style\\deploy_theme_options_css"
+		]);
+
+		$orgzr->add([
+			'name' => _x('Content Background color', 'Theme options', 'Theme options', 'waboot'),
+			'desc' => _x('Change the content background color.', 'Theme options', 'waboot'),
+			'id' => 'content_bgcolor',
+			'type' => 'color',
+			'save_action' => "\\Waboot\\components\\style\\deploy_theme_options_css"
 		]);
 
 		$orgzr->reset_group();
@@ -107,7 +144,7 @@ class Style extends \WBF\modules\components\Component{
 			'id' => 'btstrp_text_color',
 			'std' => "#333333",
 			'type' => 'color',
-			'save_action' => "\\Waboot\\functions\\deploy_theme_options_css"
+			'save_action' => "\\Waboot\\components\\style\\deploy_theme_options_css"
 		));
 
 		$orgzr->add(array(
@@ -117,7 +154,7 @@ class Style extends \WBF\modules\components\Component{
 			'id' => 'btstrp_title_color',
 			'std' => "#333333",
 			'type' => 'color',
-			'save_action' => "\\Waboot\\functions\\deploy_theme_options_css"
+			'save_action' => "\\Waboot\\components\\style\\deploy_theme_options_css"
 		));
 
 		$orgzr->add(array(
@@ -127,7 +164,7 @@ class Style extends \WBF\modules\components\Component{
 			'id' => 'btstrp_brand_primary',
 			'std' => "#428bca",
 			'type' => 'color',
-			'save_action' => "\\Waboot\\functions\\deploy_theme_options_css"
+			'save_action' => "\\Waboot\\components\\style\\deploy_theme_options_css"
 		));
 
 		$orgzr->add(array(
@@ -137,7 +174,7 @@ class Style extends \WBF\modules\components\Component{
 			'id' => 'btstrp_brand_success',
 			'std' => "#5cb85c",
 			'type' => 'color',
-			'save_action' => "\\Waboot\\functions\\deploy_theme_options_css"
+			'save_action' => "\\Waboot\\components\\style\\deploy_theme_options_css"
 		));
 
 		$orgzr->add(array(
@@ -147,7 +184,7 @@ class Style extends \WBF\modules\components\Component{
 			'id' => 'btstrp_brand_info',
 			'std' => "#5bc0de",
 			'type' => 'color',
-			'save_action' => "\\Waboot\\functions\\deploy_theme_options_css"
+			'save_action' => "\\Waboot\\components\\style\\deploy_theme_options_css"
 		));
 
 		$orgzr->add(array(
@@ -157,7 +194,7 @@ class Style extends \WBF\modules\components\Component{
 			'id' => 'btstrp_brand_warning',
 			'std' => "#f0ad4e",
 			'type' => 'color',
-			'save_action' => "\\Waboot\\functions\\deploy_theme_options_css"
+			'save_action' => "\\Waboot\\components\\style\\deploy_theme_options_css"
 		));
 
 		$orgzr->add(array(
@@ -167,7 +204,7 @@ class Style extends \WBF\modules\components\Component{
 			'id' => 'btstrp_brand_danger',
 			'std' => "#d9534f",
 			'type' => 'color',
-			'save_action' => "\\Waboot\\functions\\deploy_theme_options_css"
+			'save_action' => "\\Waboot\\components\\style\\deploy_theme_options_css"
 		));
 
 		$orgzr->add(array(
@@ -177,20 +214,46 @@ class Style extends \WBF\modules\components\Component{
 			'id' => 'btstrp_well_bg',
 			'std' => "#f5f5f5",
 			'type' => 'color',
-			'save_action' => "\\Waboot\\functions\\deploy_theme_options_css"
-		));
-
-		$orgzr->add(array(
-			'name' => _x('Border radius base', 'Theme options', 'waboot'),
-			'desc' => _x('Change the width in pixel of @border-radius-base.', 'Theme options', 'waboot'),
-			'class' => 'half_option',
-			'id' => 'btstrp_border_radius_base',
-			'std' => "4",
-			'type' => 'text',
-			'save_action' => "\\Waboot\\functions\\deploy_theme_options_css"
+			'save_action' => "\\Waboot\\components\\style\\deploy_theme_options_css"
 		));
 
 		$orgzr->reset_group();
 		$orgzr->set_group("std_options");
+
+		/*
+		 * TYPOGRAPHY
+		 */
+
+		$orgzr->add(array(
+			'name' => _x( 'Typography', 'Theme options', 'waboot' ),
+			'desc' => _x( 'Settings about typography', 'Theme options', 'waboot' ),
+			'type' => 'info'
+		));
+
+		$orgzr->set_group("css_injection");
+
+		$updateFontCacheLink = \class_exists(\WBF\includes\GoogleFontsRetriever::class) && \function_exists('\WBF\includes\GoogleFontsRetriever::get_update_font_cache_link') ? \WBF\includes\GoogleFontsRetriever::get_update_font_cache_link() : '#';
+
+		$orgzr->add(array(
+			'name' => _x('Google Fonts API Key', 'Theme options', 'waboot'),
+			'desc' => sprintf(_x('Add here your google fonts api key. Update the fonts cache by clicking <a href="%s">here</a>.', 'Theme options', 'waboot'),$updateFontCacheLink),
+			'class' => 'half_option',
+			'id' => 'google_fonts_api_key',
+			'std' => '',
+			'type' => 'text'
+		));
+
+		$orgzr->add([
+			'name' => _x('Fonts to load', "Theme Options", 'waboot'),
+			'id' => 'fonts',
+			'css_selectors' => ['body,p,ul', 'h1,h2,h3', 'h4,h5,h6'],
+			'std' => [],
+			'type' => 'fonts_selector',
+			'fonts_type' => 'google',
+			'save_action' => "\\Waboot\\components\\style\\deploy_theme_options_css"
+		]);
+
+		$orgzr->reset_group();
+		$orgzr->reset_section();
 	}
 }
