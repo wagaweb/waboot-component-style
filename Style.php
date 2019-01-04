@@ -4,7 +4,7 @@ Component Name: Style
 Description: Adds style options to Waboot
 Category: Styles
 Tags: Styles
-Version: 1.0.0
+Version: 1.1.0
 Author: Waboot Team <info@waboot.io>
 Author URI: http://www.waboot.io
  */
