@@ -18,24 +18,23 @@ class Style extends \WBF\modules\components\Component{
 
 	public function run() {
 		parent::run();
-	}
-
-	public function styles() {
-		$file = \Waboot\components\style\get_theme_options_css_dest_path();
-		if(!is_readable($file)){
-			return;
-		}
-		$assets['waboot-theme-options-style'] = [
-			'uri' => \Waboot\components\style\get_theme_options_css_dest_uri(),
-			'path' => $file,
-			'type' => 'css'
-		];
-		$am = new \WBF\components\assets\AssetsManager($assets);
-		try{
-			$am->enqueue();
-		}catch (\Exception $e){
-			trigger_error($e->getMessage(),E_USER_NOTICE);
-		}
+		add_action('wp_enqueue_scripts', function(){
+            $file = \Waboot\components\style\get_theme_options_css_dest_path();
+            if(!is_readable($file)){
+                return;
+            }
+            $assets['waboot-theme-options-style'] = [
+                'uri' => \Waboot\components\style\get_theme_options_css_dest_uri(),
+                'path' => $file,
+                'type' => 'css'
+            ];
+            $am = new \WBF\components\assets\AssetsManager($assets);
+            try{
+                $am->enqueue();
+            }catch (\Exception $e){
+                trigger_error($e->getMessage(),E_USER_NOTICE);
+            }
+        },9); //7 = waboot styles, 8 = components merged style file
 	}
 
 	public function register_options() {
